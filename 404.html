@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Myst Rift - 404 Not Found</title>
+  <link rel="icon" href="/media/icon.ico" type="image/x-icon"/>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap');
+    * {
+      margin: 0; padding: 0; box-sizing: border-box;
+    }
+    html, body {
+      height: 100%;
+      font-family: 'Orbitron', sans-serif;
+      background: #000;
+      color: #f0ad4e;
+      overflow: hidden;
+    }
+    .video-bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+    .video-bg video {
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover;
+      filter: brightness(0.45) contrast(1.1);
+    }
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(6, 6, 6, 0.75);
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      text-align: center;
+    }
+    .content {
+      max-width: 480px;
+      color: #f0ad4e;
+      text-shadow: 0 0 12px rgba(240, 173, 78, 0.7);
+    }
+    h1 {
+      font-size: 10vw;
+      font-weight: 900;
+      letter-spacing: 6px;
+      margin-bottom: 10px;
+      user-select: none;
+    }
+    h2 {
+      font-size: 2.4rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+      user-select: none;
+    }
+    p {
+      font-size: 1.1rem;
+      margin-bottom: 40px;
+      color: #ddd;
+      user-select: none;
+    }
+    .btn-home {
+      font-family: 'Orbitron', monospace;
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: #000;
+      background: #f0ad4e;
+      padding: 14px 36px;
+      border-radius: 12px;
+      text-decoration: none;
+      box-shadow: 0 0 18px rgba(240, 173, 78, 0.9);
+      transition: background-color 0.3s ease, color 0.3s ease;
+      user-select: none;
+      display: inline-block;
+      cursor: pointer;
+    }
+    .btn-home:hover {
+      background: #d4952a;
+      color: #fff;
+      box-shadow: 0 0 28px rgba(212, 149, 42, 1);
+    }
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 20vw;
+        letter-spacing: 3px;
+      }
+      h2 {
+        font-size: 1.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="video-bg" aria-hidden="true">
+    <video autoplay muted loop playsinline>
+      <source src="/media/background.mp4" type="video/mp4" />
+      <img src="/media/main.dde7f6b9.jpg" alt="" style="display:none;" />
+    </video>
+  </div>
+  <div class="overlay" role="main" aria-labelledby="title" aria-describedby="desc">
+    <div class="content">
+      <h2 id="desc">Page Not Found</h2>
+      <p>Oops! The page you're looking for doesn't exist or has been moved.</p>
+      <a href="/" class="btn-home" role="button" aria-label="Back to MystRift homepage">
+        Back to Home
+      </a>
+    </div>
+  </div>
+  <script src="/js/maflex_nodevtools.js"></script>
+</body>
+</html>
